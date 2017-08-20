@@ -1,0 +1,78 @@
+cluster starting url for staples
+
+http://fe.bstore.bloomreach.com:8778/sc2/launchcluster_v7/SNAP_SRCH_QUALITY?staples_com_products&replicas=1&frontend=&debug=false&on_demand=false&replicateCf=true&replicateCol=true&targetAppId=
+
+Check status at http://fe.bstore.bloomreach.com:8778/sc2/requests/false
+
+get qd score file from s3 location 
+
+s3://brp-mobile/data/staples_com/realm/prod/gen_coview_data/20150922/external_query_dependent_score_direct
+s3://brp-mobile/data/DOMAIN_KEY/realm/prod/gen_coview_data/DATE/external_query_dependent_score_direct
+
+query to get all products in solr for staples/or any merchant
+
+http://ec2-54-226-107-165.compute-1.amazonaws.com:8983/solr/staples_com_products/browse_anchor?fl=product_id&wt=csv&rows=1000000000&q=*
+
+
+permananent solr cluster on ec2 : 
+http://ec2-184-73-9-70.compute-1.amazonaws.com:8983/solr/#/
+
+
+
+unload some data from a table to s3 
+
+
+UNLOAD('SELECT trim(query),COUNT(*) AS query_count FROM searsoutlet.prod_sessions_table WHERE TYPE IN (''keyword'',''keywords'',''suggest'',''search_redirect'') 
+AND CAST(START_TIME AS DATE) BETWEEN ''2015-09-15'' AND ''2015-10-14'' GROUP BY query') to 's3://brp-mobile/coverage/redshift/searsoutliet/queries/'
+credentials 'aws_access_key_id=AKIAIBS6WJXTFANJPDYA;aws_secret_access_key=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' delimiter as '\t' allowoverwrite ;
+
+
+query,product pair which were converted when experiment is by Bloomreach
+
+UNLOAD('SELECT browse_session_query,browse_session_products_atc ,conversions from staples.browse_sessions
+WHERE cdate between ''20151011'' and ''20151018''
+AND   browse_session_type != ''(not set)''
+AND   (snap_experiment = ''T'')
+AND browse_session_products_atc != ''(not set)''
+AND conversions > 0 
+') to 's3://brp-mobile/coverage/redshift/staples/query_product_conversion_br/'
+credentials 'aws_access_key_id=AKIAIBS6WJXTFANJPDYA;aws_secret_access_key=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' delimiter as '\t' allowoverwrite ;
+
+
+Command to delete some column nd den select unique and then sort randomly nd select first 100 rows
+
+cut -d':' -f2-2 external_query_dependent_score_direct | cut -d'=' -f 1-1  | uniq | sort -R | head -n 100 > qd_kohls_100
+
+sort randomly on column 1
+gsort -k1 -t',' fileName
+
+paste one column from a file into another file
+pr -mts' ' file1 file2
+paste -d' ' file1 file2
+
+
+
+start solr server locally for a merchant <M>
+Setup : 								fab local_solrcloud_setup
+Start : 								fab local_solrcloud_start
+Get collection nd index nd configs : 	fab realm:mob2 merchant:M local_solrcloud_create_collection
+
+
+0.us-east-1c.frontend.mob3.mobile.brmob.net  ----mob3
+
+redshift database 
+
+jdbc:postgresql://snap.prod.redshift.bloomreach.com:5439/analytics
+username :mobile_analytics
+here_is_sOme_g00d_stuff
+
+
+
+jdbc:postgresql://prod.redshift.bloomreach.com:5439/analytics
+username :bloomreach
+password : sh0w me m0re mOney!
+
+
+start solr locally and use different index for some merchant
+
+

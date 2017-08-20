@@ -1,0 +1,8 @@
+hadoop jar ~/br/work/src/backend/dist/lib/bloomreach-hadoop.jar com.bloomreach.mobile.search.qdV4.CasQueryDependentFlowRunner /mnt/coview_data/part-00000 /mnt/coview_data/outputDirectory/ mossbros_uk /mnt/coview_data/coview_job.conf --queryDependentInput /mnt/coview_data/query_dependent_score_input --useIndirectScore True --productQueryInput /mnt/coview_data/product_query_score/part-00001 --protoOutput /mnt/coview_data/protoutput/ --countersDir /mnt/coview_data/countersdir/counters.txt --useFreshness True --freshnessStd 14 --skuInput /mnt/coview_data/skulinput/part-00001
+
+
+
+rm -rf /mnt/coview_data/protoutput && rm -rf /mnt/coview_data/outputDirectory  && 
+
+
+hadoop jar ~/br/work/src/backend/dist/lib/bloomreach-hadoop.jar com.bloomreach.mobile.search.qdV4.CasQueryDependentFlowRunner /mnt/coview_data/part-00000 /mnt/coview_data/outputDirectory/ mossbros_uk /mnt/coview_data/coview_job.conf --queryDependentInput /mnt/coview_data/query_dependent_score_input --useIndirectScore True --productQueryInput /mnt/coview_data/product_query_score/part-00001 --protoOutput /mnt/coview_data/protoutput --countersDir /mnt/coview_data/countersdir/ --useFreshness True --freshnessStd 14 --skuInput /mnt/coview_data/skulinput/part-00001

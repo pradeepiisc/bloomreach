@@ -1,0 +1,150 @@
+AWS account...
+
+https://bloomreach.signin.aws.amazon.com/console
+
+Pending tasks : 
+AWS account access/enable
+read pom.xml
+read git
+read maven
+read zookeper
+
+
+
+
+START SOLR 
+in folder 
+/br/work/src/mobile/solr
+
+MAVEN_OPTS="-Xms3072m -Xmx4096m -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5900 -Dsolr.solr.home=/mnt/production/solr -Dsolr.solr.home=/mnt/production/solr -Dsolr.top.dir=/mnt/production/solr" mvn -Dmaven.test.skip=true clean package tomcat7:run-war-only
+
+
+s3://br-resources/bloomstore/solr
+
+Solr query to a specific merchant
+
+http://ec2-54-163-52-160.compute-1.amazonaws.com:8983/solr/kohls_com_products/select?q=ronak%debugQuery=true
+
+http://ec2-54-224-99-158.compute-1.amazonaws.com:8983/solr/#/ ....another solr server
+
+type browse instead of select in above query to see different view...
+
+ec2-54-163-52-160 is the DNS of the machine where service is running
+
+merchant name like kohls_com ...is a collection name ...pattern followed at BR
+select_anchor
+select_qd20130731
+select?q=ronak is a handler 
+
+
+if json is not viewable in proper format in chrome 
+add its extension by searching(json chrome extension) on google or following this link
+
+https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en
+
+
+GIT...
+
+Git ui ...STASH
+
+
+https://repo.bloomreach.com
+
+git status to see which files have been changed in local direcotry
+
+
+git commands 
+
+git status...see the changes in various files if changed locally
+git reset HEAD ...reverts to old version...takes all files ...HEAD to origin master
+git reset <commitId> ...to particular commit id
+git checkout <filename> ...changes to original file content in <filename>
+git log...to check various commits happening 
+
+git add is used before commit to make commit list
+git add ./ ....all files from current directory will be added to commit list
+git add <filename> ...add this filename to commit list
+git commit -a -m "COMMENT"...-a for appending changes to git repository...-m for message in COMMENT section 
+git diff bb44aeaf3c4843d3e2bae6b15df3f14f055b406a(<commit id>) > ~/diffs/metrics.diff
+git show <commit ID> ...which files have been modified
+
+
+
+
+FROM OFFICIAL WEBSITE
+3 states : committed(permanent in git repository),modified(changed file) and staged(changed file in local direcotry ready to be committed)
+
+https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository
+
+tracked file : were in the last snapshot(can be modified/ummodified/staged)
+untracked file : new file in working directory not in previous snapshot
+git init
+git clone source destination
+git status - what files were changed
+git diff - what exactly changed in all changed files
+
+
+git checkout master 
+git add -u 
+git add filenames
+git committ -a -m "message"
+mkdir ~/diff/
+git diff committID ~/diff/xyz.diff
+git rebase origin/master
+git pull
+
+first add file names which are to be commited and then check out and commit  with a comment...
+
+
+mvn
+
+mvn clean ---clean all previous executables  and dependencies
+mvn install -DskipTests=true
+mvn repository has all open source libraries which are required during building/compiling 
+
+mvn -Dtest=TestCircle#xyz test....to test a particular method xyz of class TestCircle
+
+
+go to RUN in intelliJ and edit configurations...and set default like port numbers...5005...click + and Remote
+den start debugging
+if error due to solr attachement to debugger...
+go to folder where solr is installed...(/mnt/production/solr/)
+
+Get the solr 4.6.1 jar from someone and creat a soft link called solrcloud_latest to this jar
+get zookeeper 3.4.6 and put it in mnt folder
+
+cd /mnt/zookeeper-.../bin   
+./zkServer.
+
+/mnt/solrcloud_latest/bloomstore/cloud-scripts/zkcli.sh -cmd upconfig -zkhost localhost:2181 -d /mnt/configs -n snap_pagedata_config
+
+
+One time setup done.
+
+
+1. code changes (where  : inside br/work/mobile/solr)
+2. build 
+    - br/work/src/mobile/ : run command fab start_integration_search_debug
+    - br/work/src/mobile/sc2-jar/ (mvn install)
+    - br/work/src/mobile/sc2-jar/target/sc2-deploy-4.6.1.jar
+
+3. cp br/work/src/mobile/sc2-jar/target/sc2-deploy-4.6.1.jar /mnt/solrcloud_latest/bloomstore/solr/lib/sc2-deploy-4.6.1.jar
+4. for checking sorl jar : if solr is running locally or not :  ps -aef | grep start.jar
+5. kill the solr process : pkill -9 -f start.jar
+6. cd /mnt/solrcloud_latest/bloomstore and run ./start_solr.sh or run ./start_solr_Debug.sh....in debugging mode
+7. go to intellij and under RUN in toolbar,click debug solr ....it will attach to solr...
+
+
+
+mob1: http://mob1-solrcloud.bstore.bloomreach.com/solr/
+mob2: http://mob2-solrcloud.bstore.bloomreach.com/solr/
+prod: http://ec2-54-227-58-25.compute-1.amazonaws.com:8983/solr/
+      http://lb-bm-sc2-search-20788555.us-east-1.elb.amazonaws.com/solr/  
+
+browse handler is what solr provides and browse_anchor is modified version by BR
+there are 2 kind of fields in solr: static and dynamic. static ones are provided by all merchants and dynamic fields are merchant specific.
+
+
+
+
+

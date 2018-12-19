@@ -1,6 +1,4 @@
 """
-Copyright 2016 BloomReach.com. All rights reserved
-Author(s): Pradeep Bansal (pradeep.bansal@bloomreach.com)
 Date: April 11th, 2016
 """ 
 
